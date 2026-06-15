@@ -1,0 +1,102 @@
+<?php
+return [
+    'user_registered' => 'User registered successfully.',
+    'user_logged_in' => 'User logged in successfully.',
+    'user_logged_out' => 'User logged out successfully.',
+    'password_changed' => 'Password updated successfully.',
+    'user_not_found' => 'User does not exist.',
+    'user_deleted' => 'User deleted successfully.',
+    'something_went_wrong' => 'Something went wrong. Please try again.',
+    'country_list_retrieved' => 'All countries retrieved successfully.',
+    'user_not_found_or_device_token_missing' => 'User not found or device token is missing',
+    'notification_retrieval_error' => 'An error occurred while retrieving notifications.',
+    'notification_deleted' => 'Notification deleted successfully.',
+    'all_notifications_cleared' => 'All notifications cleared successfully.',
+    's3_presigned_url_generated' => 'S3 presigned URL generated successfully.',
+    'otp_sent_to_email' => 'OTP sent to your email.',
+    'session_expired' => 'Session expired. Please login again.',
+    'invalid_otp' => 'Invalid OTP. Please try again.',
+    'otp_expired' => 'Your OTP has expired. Please request a new one.',
+    'otp_sent_successfully' => 'New OTP sent successfully.',
+    'otp_send_failed' => 'Failed to send OTP. Please try again later.',
+    'email_not_found' => 'Email not found.',
+    'password_reset_link_sent' => 'Password reset link sent to your email.',
+    'invalid_or_expired_token' => 'Invalid or expired token',
+    'password_reset_successfully' => 'Password reset successfully',
+    'invalid_credentials' => 'Invalid credentials',
+    'user_unauthenticated' => 'User unauthenticated',
+    'current_password_incorrect' => 'Current password is incorrect',
+    'no_countries_found' => 'No countries found',
+    'verification_code_required' => 'Verification code is required.',
+    'verification_code_must_be_6_digits' => 'Verification code must be 6 digits.',
+    'user_deleted_successfully' => 'User deleted successfully.',
+    'user_updated_successfully' => 'User updated successfully.',
+    'password_reset_email_sent'   => 'Password updated and a notification email has been sent to the user.',
+    'password_reset_email_failed' => 'Could not send the notification email. Password was not changed. Please verify your mail configuration and try again.',
+    'password_reset_failed'       => 'Failed to reset the password. Please try again.',
+
+    // Site Settings
+    'site_settings_updated'               => 'Site settings updated successfully.',
+    'site_name_required'                  => 'Site name is required.',
+    'site_name_max'                       => 'Site name may not exceed 150 characters.',
+    'site_logo_image'                     => 'Logo must be a valid image file.',
+    'site_logo_mimes'                     => 'Logo must be JPG, JPEG, PNG, SVG, or WebP.',
+    'site_logo_max'                       => 'Logo size may not exceed 2MB.',
+    'auth_side_banner_image'              => 'Auth banner must be a valid image file.',
+    'auth_side_banner_mimes'              => 'Auth banner must be JPG, JPEG, PNG, or WebP.',
+    'auth_side_banner_max'                => 'Auth banner size may not exceed 2MB.',
+    'admin_theme_colour_required'         => 'Primary theme colour is required.',
+    'admin_theme_colour_regex'            => 'Primary theme colour must be a valid hex code (e.g. #2563eb).',
+    'admin_secondary_colour_required'     => 'Secondary theme colour is required.',
+    'admin_secondary_colour_regex'        => 'Secondary theme colour must be a valid hex code (e.g. #64748b).',
+    'facebook_url_url'                    => 'Facebook URL must be a valid URL.',
+    'instagram_url_url'                   => 'Instagram URL must be a valid URL.',
+    'linkedin_url_url'                    => 'LinkedIn URL must be a valid URL.',
+    'twitter_url_url'                     => 'Twitter URL must be a valid URL.',
+
+    // Email Templates
+    'email_template_created'              => 'Email template created successfully.',
+    'email_template_updated'              => 'Email template updated successfully.',
+    'email_template_deleted'              => 'Email template deleted successfully.',
+    'email_template_not_found'            => 'Email template not found.',
+    'email_template_name_required'        => 'Template identifier is required.',
+    'email_template_name_taken'           => 'A template with this identifier already exists. Please choose a different name.',
+    'email_template_slug_empty'           => 'Template identifier must contain at least one letter or number.',
+    'email_template_subject_required'     => 'Email subject is required.',
+    'email_template_body_required'        => 'Email body is required.',
+
+    // FAQ
+    'faq_created' => 'FAQ created successfully.',
+    'faq_updated' => 'FAQ updated successfully.',
+    'faq_deleted' => 'FAQ deleted successfully.',
+    'faq_not_found' => 'FAQ not found.',
+    'faq_question_required' => 'Question is required.',
+    'faq_answer_required' => 'Answer is required.',
+
+    // ID Hashing
+    'invalid_identifier' => 'The requested record could not be located.',
+
+    // Projects
+    'project_created'   => 'Project created successfully.',
+    'project_updated'   => 'Project updated successfully.',
+    'project_deleted'   => 'Project deleted successfully.',
+    'project_not_found'  => 'Project not found.',
+    'checklist_assigned'  => 'Checklist assigned successfully.',
+    'verification_saved'  => 'Verification progress saved successfully.',
+
+    // CMS Pages
+    'cms_page_created' => 'CMS page created successfully.',
+    'cms_page_updated' => 'CMS page updated successfully.',
+    'cms_page_deleted' => 'CMS page deleted successfully.',
+    'cms_page_not_found' => 'CMS page not found.',
+    'cms_page_title_required' => 'Title is required.',
+    'cms_page_slug_required' => 'Slug is required.',
+    'cms_page_description_required' => 'Description is required.',
+
+    // User
+    'user_created' => 'User created successfully.',
+    'user_welcome_email_sent' => 'Welcome email sent successfully.',
+    'user_welcome_email_failed' => 'Failed to send welcome email. Please try again.',
+
+];                       
+

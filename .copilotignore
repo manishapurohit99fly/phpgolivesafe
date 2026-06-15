@@ -1,0 +1,83 @@
+# .copilotignore — GitHub Copilot context exclusions
+# Prevents Copilot from indexing generated, sensitive, or irrelevant files.
+# Syntax follows .gitignore pattern matching rules.
+
+# ──────────────────────────────────────────────
+# Dependencies & Package Managers
+# ──────────────────────────────────────────────
+/vendor/
+/node_modules/
+
+# ──────────────────────────────────────────────
+# Environment & Secrets
+# ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ──────────────────────────────────────────────
+# Laravel Framework Generated Files
+# ──────────────────────────────────────────────
+/bootstrap/cache/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+/storage/debugbar/
+/storage/logs/
+
+# ──────────────────────────────────────────────
+# Build & Compiled Assets
+# ──────────────────────────────────────────────
+/public/build/
+/public/hot
+/public/assets/vendor/
+
+# ──────────────────────────────────────────────
+# Test Artifacts & Coverage Reports
+# ──────────────────────────────────────────────
+/.phpunit.cache/
+/.phpunit.result.cache
+/coverage/
+/html-coverage/
+
+# ──────────────────────────────────────────────
+# IDE & Editor Metadata
+# ──────────────────────────────────────────────
+/.idea/
+/.vscode/extensions.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ──────────────────────────────────────────────
+# Log & Temp Files
+# ──────────────────────────────────────────────
+*.log
+/storage/app/temp/
+/tmp/
+
+# ──────────────────────────────────────────────
+# Database Files (SQLite dev/test)
+# ──────────────────────────────────────────────
+database/*.sqlite
+database/*.sqlite-journal
+
+# ──────────────────────────────────────────────
+# Uploaded User Content (S3-backed in production)
+# ──────────────────────────────────────────────
+/storage/app/public/
+/storage/app/uploads/
+
+# ──────────────────────────────────────────────
+# Orphaned / Legacy Code (not loaded by bootstrap)
+# ──────────────────────────────────────────────
+routes/api.php
+
+# ──────────────────────────────────────────────
+# Lock Files (no code signal for Copilot)
+# ──────────────────────────────────────────────
+composer.lock
+package-lock.json
+yarn.lock

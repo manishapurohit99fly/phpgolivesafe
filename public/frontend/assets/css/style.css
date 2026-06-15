@@ -1,0 +1,678 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Typography & Colors */
+.text-dark-blue { color: var(--dark-blue) !important; }
+.text-pink { color: var(--pink) !important; }
+.bg-pink { background-color: var(--pink) !important; }
+.dark-blue-bg { background-color: var(--dark-blue) !important; }
+.font-sm { font-size: 0.85rem; letter-spacing: 1px; }
+.space-y-3 li { margin-bottom: 0.75rem; }
+.space-y-2 li { margin-bottom: 0.5rem; }
+.max-w-800 { max-width: 800px; }
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--pink);
+    border-color: var(--pink);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: #c4004e;
+    border-color: #c4004e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(230, 0, 92, 0.3);
+}
+
+/* Navbar */
+.navbar {
+    transition: all 0.3s ease;
+}
+.navbar-nav .nav-link {
+    color: var(--dark-blue);
+    font-weight: 500;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+.navbar-nav .nav-link:hover {
+    color: var(--pink);
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: var(--dark-blue);
+    position: relative;
+}
+.hero-img {
+    transition: transform 0.5s ease;
+}
+.hero-img:hover {
+    transform: scale(1.02);
+}
+.hero-submenu ul li {
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.hero-submenu ul li:hover {
+    color: var(--pink);
+}
+
+/* Feature Cards */
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+.icon-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgba(0, 33, 71, 0.05);
+    justify-content: center;
+}
+
+/* Steps Section */
+.step-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--pink);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(230, 0, 92, 0.4);
+}
+
+/* Pricing Section */
+.pricing-card {
+    transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.transform-scale {
+    transform: scale(1.05);
+    z-index: 2;
+}
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+.transform-scale:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+/* FAQ Section */
+.faq-item {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    height: 100%;
+    transition: box-shadow 0.3s ease;
+}
+.faq-item:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* Footer Links */
+.hover-pink {
+    transition: color 0.3s ease;
+}
+.hover-pink:hover {
+    color: var(--pink) !important;
+}
+
+/* Responsiveness Adjustments */
+@media (max-width: 991px) {
+    .transform-scale {
+        transform: scale(1);
+    }
+    .transform-scale:hover {
+        transform: translateY(-10px);
+    }
+    .hero-submenu ul {
+        gap: 15px;
+        justify-content: center !important;
+    }
+}
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+    .hero-section .d-flex {
+        justify-content: center;
+    }
+    .stats-container {
+        justify-content: center;
+    }
+}
+
+
+
+
+.blog-section {
+    background: #f8fafc;
+}
+
+.blog-card {
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.35s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+}
+
+.blog-image {
+    height: 240px;
+}
+
+.blog-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.blog-card:hover .blog-thumb {
+    transform: scale(1.08);
+}
+
+.blog-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.25), transparent);
+}
+
+.blog-card .btn {
+    transition: all 0.3s ease;
+}
+
+.blog-card .btn:hover {
+    transform: translateX(4px);
+}
+
+.blog-detail-section {
+    background: #f8fafc;
+}
+
+.banner-img {
+    max-height: 550px;
+    object-fit: cover;
+}
+
+.blog-content-wrapper {
+    margin-top: -80px;
+    position: relative;
+    z-index: 2;
+}
+
+.blog-title {
+    font-size: 2.8rem;
+    line-height: 1.3;
+    color: #111827;
+}
+
+.blog-excerpt {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: #6b7280;
+    border-left: 4px solid #0d6efd;
+    padding-left: 20px;
+    font-style: italic;
+}
+
+.blog-description {
+    color: #374151;
+    line-height: 2;
+    font-size: 1.05rem;
+}
+
+.blog-description p {
+    margin-bottom: 1.5rem;
+}
+
+.blog-description h1,
+.blog-description h2,
+.blog-description h3,
+.blog-description h4,
+.blog-description h5,
+.blog-description h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.blog-description img {
+    max-width: 100%;
+    border-radius: 14px;
+    margin: 20px 0;
+}
+
+.related-blog-section {
+    background: #ffffff;
+}
+
+.related-blog-card {
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.35s ease;
+}
+
+.related-blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.08) !important;
+}
+
+.related-blog-image {
+    height: 230px;
+    overflow: hidden;
+}
+
+.related-blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.related-blog-card:hover img {
+    transform: scale(1.08);
+}
+
+@media(max-width: 768px) {
+
+    .blog-title {
+        font-size: 2rem;
+    }
+
+    .blog-content-wrapper {
+        margin-top: -30px;
+        padding: 25px !important;
+    }
+
+}
+
+
+
+/* Comment form design */
+.wp-comment-section {
+    background: #f8f9fa;
+}
+
+.comment-wrapper {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+}
+
+.comment-form-box {
+    padding-bottom: 40px;
+    border-bottom: 1px solid #eee;
+}
+
+.single-comment {
+    margin-bottom: 35px;
+}
+
+.comment-body {
+    display: flex;
+    gap: 18px;
+}
+
+.comment-avatar {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.comment-content {
+    width: 100%;
+}
+
+.comment-meta {
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.comment-date {
+    font-size: 13px;
+    color: #777;
+}
+
+.comment-text p {
+    margin-bottom: 15px;
+    line-height: 1.8;
+    color: #444;
+}
+
+.reply-btn {
+    border: 0;
+    background: transparent;
+    color: #111;
+    font-weight: 600;
+    padding: 0;
+    font-size: 14px;
+}
+
+.reply-btn:hover {
+    color: #666;
+}
+
+.comment-replies {
+    margin-top: 30px;
+    margin-left: 70px;
+    border-left: 2px solid #eee;
+    padding-left: 25px;
+}
+
+.child-comment {
+    margin-bottom: 25px;
+}
+
+.reply-form-box {
+    display: none;
+    margin-top: 20px;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.form-control {
+    border-radius: 12px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    box-shadow: none !important;
+}
+
+.form-control:focus {
+    border-color: #111;
+}
+
+@media(max-width:768px){
+
+    .comment-wrapper {
+        padding: 25px;
+    }
+
+    .comment-body {
+        gap: 12px;
+    }
+
+    .comment-avatar {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        font-size: 15px;
+    }
+
+    .comment-replies {
+        margin-left: 20px;
+        padding-left: 15px;
+    }
+
+}
+
+
+
+/* Maintenance mode styles */
+/* Maintenance Section Custom Styles */
+.maintenance-section {
+    background: radial-gradient(circle at 10% 20%, rgba(2, 40, 85, 0.05) 0%, rgba(218, 2, 112, 0.05) 90%);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.maintenance-card {
+    border: 1px solid rgba(2, 40, 85, 0.1);
+    box-shadow: 0 15px 35px rgba(2, 40, 85, 0.08);
+    border-radius: 16px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.text-primary-custom {
+    color: #022855;
+}
+
+.text-secondary-custom {
+    color: #da0270;
+}
+
+.bg-primary-custom {
+    background-color: #022855;
+    color: #ffffff;
+}
+
+.bg-secondary-custom {
+    background-color: #da0270;
+    color: #ffffff;
+}
+
+/* Accent Badge Animation */
+.pulse-badge {
+    background: rgba(218, 2, 112, 0.1);
+    color: #da0270;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.btn-custom-primary {
+    background-color: #022855;
+    color: #ffffff;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-primary:hover {
+    background-color: #011936;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+/* Maintenance mode styles */
+
+
+
+/* Comming soon styles */
+/* Coming Soon Section Custom Styles */
+.coming-soon-section {
+    background: linear-gradient(135deg, rgba(2, 40, 85, 0.03) 0%, rgba(218, 2, 112, 0.06) 100%);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+}
+
+.coming-soon-card {
+    border: none;
+    box-shadow: 0 20px 40px rgba(2, 40, 85, 0.08);
+    border-radius: 20px;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Top decorative gradient bar */
+.coming-soon-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #022855 0%, #da0270 100%);
+}
+
+.excitement-badge {
+    background-color: #022855;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(2, 40, 85, 0.2);
+}
+
+/* Countdown UI */
+.countdown-box {
+    background-color: rgba(2, 40, 85, 0.04);
+    border: 1px solid rgba(2, 40, 85, 0.08);
+    border-radius: 12px;
+    padding: 1.2rem 0.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.countdown-box:hover {
+    transform: translateY(-3px);
+    border-color: rgba(218, 2, 112, 0.3);
+}
+
+.countdown-number {
+    color: #da0270; /* Secondary color for pop */
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.countdown-label {
+    color: #022855;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Form Styles */
+.notify-input {
+    border: 2px solid rgba(2, 40, 85, 0.1);
+    padding: 0.85rem 1.5rem;
+    border-radius: 50px 0 0 50px;
+    font-size: 0.95rem;
+}
+
+.notify-input:focus {
+    border-color: #da0270;
+    box-shadow: none;
+    outline: none;
+}
+
+.btn-custom-secondary {
+    background-color: #da0270;
+    color: #ffffff;
+    border: 2px solid #da0270;
+    padding: 0.85rem 2rem;
+    border-radius: 0 50px 50px 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-secondary:hover {
+    background-color: #b0025a;
+    border-color: #b0025a;
+    color: #ffffff;
+}
+/* Comming soon styles */
+
+/* Main dropdown */
+.nav-item.dropdown:hover > .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+/* Submenu dropdown */
+.dropdown-submenu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    display: none;
+    position: absolute;
+}
+
+/* Show submenu on hover */
+.dropdown-menu li:hover > .dropdown-submenu {
+    display: block;
+}
+
+/* Important */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+}
+
+/* Basic Table Design for custom contenet on CMS Page */
+figure.table{
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+}
+
+figure.table th{
+    font-weight: 600;
+}
+figure.table th,figure.table td{
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    min-width: 220px;
+}
+figure.table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+figure.table tr td img{
+max-width: 150px;
+height: auto;
+}
+figure.table tr td iframe{
+max-width: 450px;
+height: auto;
+}
+
+figure.table table{
+    width: 100% !important;
+    border-collapse: collapse;
+}

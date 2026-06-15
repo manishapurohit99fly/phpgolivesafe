@@ -1,0 +1,17 @@
+/vendor
+/bootstrap
+/config
+/database
+/routes
+/tests
+/node_modules
+/public/build
+/public/storage
+/storage
+/bootstrap/cache
+.phpunit.result.cache
+.env
+.env.*
+.idea
+.vscode
+/resources/views/emails
