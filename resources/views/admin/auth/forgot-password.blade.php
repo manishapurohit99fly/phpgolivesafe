@@ -24,7 +24,7 @@
                             <label for="exampleInputEmail1" class="form-label">Email Address <span class="text-danger">*</span></label>
                             <div class="position-relative">
                                 <input type="text" class="form-control form-control-lg no-space" placeholder="Email address"
-                                    name="email" value="adminds@yopmail.com" maxlength="64">
+                                    name="email" value="" maxlength="64">
                             </div>
                             @error('email')
                                 <div class="text-danger">{{ $message }}</div>

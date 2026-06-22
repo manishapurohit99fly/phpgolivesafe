@@ -1,39 +1,66 @@
 @extends('admin.layout.index')
-@section('admin-title', 'Project Reports')
+@section('admin-title', 'Assessment-wise Detail Report')
 
 @section('content')
-<div class="container-fluid pt-3 bg">
+<div class="container-fluid admin-list-page">
     <div class="page-content-wrapper">
 
-        <div class="page-title-row justify-content-between mb-3">
-            <h4 class="mb-0 ms-3"><i class="fa fa-chart-bar me-2"></i>Project Reports</h4>
-        </div>
+        {{-- Filter Card --}}
+        <div class="card custom-card">
+            <div class="card-header section-header">
+                <h4 class="mb-0"><i class="fa fa-chart-bar me-2"></i>Assessment-wise Detail Report</h4>
+            </div>
 
-        {{-- Project Selector --}}
-        <div class="whiteBg mb-4">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-6">
-                    <label class="form-label fw-medium">Select Project</label>
-                    <select id="reportProjectSelect" class="form-select">
-                        <option value="">— Choose a project —</option>
-                        @foreach($projects as $p)
-                            <option value="{{ encrypt_id($p->id) }}">
-                                {{ $p->project_name }}
-                                @if($p->client_name) ({{ $p->client_name }}) @endif
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="card-body section-search">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-medium">Project <span class="text-danger">*</span></label>
+                        <select id="reportProjectSelect"
+                                class="form-select"
+                                data-no-select2
+                                data-search-url="{{ route('admin.project-reports.search') }}"
+                                data-assessments-url="{{ route('admin.project-reports.assessments') }}"
+                                data-preselect="{{ $selectedProjectId ?? '' }}">
+                            <option value=""></option>
+                            @if($selectedProject)
+                                <option value="{{ $selectedProjectId }}" selected>
+                                    {{ $selectedProject->project_name }}{{ $selectedProject->client_name ? ' (' . $selectedProject->client_name . ')' : '' }}
+                                </option>
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-medium">Assessment <span class="text-danger">*</span></label>
+                        <select id="reportAssessmentSelect"
+                                class="form-select"
+                                data-no-select2
+                                data-load-url="{{ route('admin.project-reports.assessment.load') }}"
+                                data-preselect="{{ $selectedAssessmentId ?? '' }}"
+                                disabled>
+                            <option value="">— Select a project first —</option>
+                            @if($selectedAssessment)
+                                <option value="{{ $selectedAssessmentId }}" selected>{{ $selectedAssessment->name }}</option>
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 d-flex gap-2 align-items-end">
+                        <button type="button" id="generateReportBtn" class="btn btn-primary flex-grow-1" disabled>
+                            <i class="fa fa-magnifying-glass me-1"></i>Generate Report
+                        </button>
+                        <button type="button" id="resetReportBtn" class="btn btn-outline-secondary px-3" title="Reset filters">
+                            <i class="fa fa-rotate-left"></i>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        {{-- Report Container --}}
-        <div id="reportContainer">
-            <div class="text-center py-5" id="reportPlaceholder">
-                <i class="fa fa-chart-bar fa-3x text-muted d-block mb-3 opacity-25"></i>
-                <p class="text-muted">Select a project above to view its deployment report.</p>
-            </div>
-        </div>
+        {{-- Report Output — hidden until Generate Report is clicked --}}
+        <div id="reportContainer" class="d-none mt-3"></div>
 
     </div>
 </div>
@@ -41,44 +68,5 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script>
-(function () {
-    var loadUrl  = '{{ route("admin.project-reports.load") }}';
-    var preselect = '{{ $selectedProjectId ?? "" }}';
-    var $select   = $('#reportProjectSelect');
-    var $container = $('#reportContainer');
-
-    function loadReport(projectId) {
-        $container.html(
-            '<div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-2x text-muted"></i></div>'
-        );
-        $.get(loadUrl, { project_id: projectId })
-            .done(function (html) {
-                $container.html(html);
-            })
-            .fail(function () {
-                $container.html(
-                    '<div class="text-center py-4 text-danger"><i class="fa fa-triangle-exclamation me-1"></i>Failed to load report. Please try again.</div>'
-                );
-            });
-    }
-
-    $select.on('change', function () {
-        var val = $(this).val();
-        if (val) {
-            loadReport(val);
-        } else {
-            $container.html(
-                '<div class="text-center py-5"><i class="fa fa-chart-bar fa-3x text-muted d-block mb-3 opacity-25"></i><p class="text-muted">Select a project above to view its deployment report.</p></div>'
-            );
-        }
-    });
-
-    // Auto-load if navigated here with a project_id (e.g. from project list Report button)
-    if (preselect) {
-        $select.val(preselect);
-        loadReport(preselect);
-    }
-})();
-</script>
+<script src="{{ asset('assets/js/assessment-report-select.js') }}"></script>
 @endpush

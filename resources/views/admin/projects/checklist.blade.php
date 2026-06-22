@@ -14,6 +14,12 @@
                     @if($project->client_name)
                         &nbsp;&bull;&nbsp;{{ $project->client_name }}
                     @endif
+                    @if($project->techStack)
+                        &nbsp;&bull;&nbsp;
+                        <span class="badge bg-primary-subtle text-primary">
+                            <i class="fa fa-layer-group me-1"></i>{{ $project->techStack->name }}
+                        </span>
+                    @endif
                 </p>
             </div>
             <a href="{{ route('admin.project.index') }}" class="btn btn-outline-secondary">
@@ -56,8 +62,28 @@
             </div>
             <hr class="my-3">
 
+            {{-- Empty state when no categories match the tech stack --}}
+            @if($categories->isEmpty())
+                <div class="text-center py-5 text-muted">
+                    <i class="fa fa-layer-group fa-2x mb-3 d-block"></i>
+                    @if($project->tech_stack_id)
+                        No checklist items found for the <strong>{{ $project->techStack?->name }}</strong> tech stack.
+                        <br>
+                        <a href="{{ route('admin.tech-stack.index') }}" class="btn btn-sm btn-outline-primary mt-3">
+                            Manage Tech Stacks
+                        </a>
+                    @else
+                        No tech stack selected for this project.
+                        <br>
+                        <a href="{{ enroute('admin.project.edit', $project->id) }}" class="btn btn-sm btn-outline-primary mt-3">
+                            Edit Project to Set Tech Stack
+                        </a>
+                    @endif
+                </div>
+            @endif
+
             {{-- Category Accordion --}}
-            <div id="checklistAccordion">
+            <div id="checklistAccordion" {{ $categories->isEmpty() ? 'style=display:none' : '' }}>
                 @foreach($categories as $catIndex => $category)
                     @php
                         $categoryItemIds = $category->items->pluck('id')->toArray();
@@ -118,12 +144,14 @@
             </div>
 
             {{-- Bottom Save --}}
+            @if($categories->isNotEmpty())
             <div class="d-flex justify-content-end mt-5">
                 <a href="{{ route('admin.project.index') }}" class="btn btn-outline-secondary me-2">Cancel</a>
                 <button type="submit" class="btn btn-primary" id="saveBtnBottom">
                     <i class="fa fa-floppy-disk me-1"></i>Save Assignment
                 </button>
             </div>
+            @endif
 
         </form>
     </div>

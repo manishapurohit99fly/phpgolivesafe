@@ -73,7 +73,7 @@
 
                             <div class="row">
                                 <div class="col-12 d-flex justify-content-end gap-2 mt-2">
-                                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">
+                                    <a href="{{ (int) (auth('admin')->user()?->role === 1) ? route('admin.dashboard') : route('user.dashboard') }}" class="btn btn-outline-secondary">
                                         Cancel
                                     </a>
                                     <button type="submit" class="btn btn-primary">

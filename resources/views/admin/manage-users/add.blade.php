@@ -82,7 +82,7 @@
 
                             <div class="col-md-6">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select id="status" name="status" class="form-select">
+                                <select id="status" name="status" class="form-select select2">
                                     <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active</option>
                                     <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive
                                     </option>

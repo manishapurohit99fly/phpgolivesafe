@@ -41,11 +41,17 @@ return [
     'post_meta'        => $prefix . 'post_meta',
 
     /* Deployment Checklist */
+    'tech_stacks'         => $prefix . 'tech_stacks',
     'projects'            => $prefix . 'projects',
     'checklist_categories' => $prefix . 'checklist_categories',
     'checklist_items'     => $prefix . 'checklist_items',
     'project_checklists'  => $prefix . 'project_checklists',
     'shared_reports'      => $prefix . 'shared_reports',
     'project_users'       => $prefix . 'project_users',
+
+    /* Assessments */
+    'assessments'            => $prefix . 'assessments',
+    'assessment_checklists'  => $prefix . 'assessment_checklists',
+    'assessment_users'       => $prefix . 'assessment_users',
 
 ];

@@ -5,7 +5,7 @@
 <div class="container-fluid pt-3 bg"
     id="reportDashboard"
 >
-    @include('admin.partials.project-report')
+    @include('partials.project-report')
   
 </div>
 @endsection

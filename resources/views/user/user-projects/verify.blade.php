@@ -15,7 +15,7 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('user.project.index') }}" class="btn btn-outline-secondary btn-sm">
+                <a href="{{ route('user.project.index') }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left me-1"></i>Back to My Projects
                 </a>
             </div>
@@ -108,12 +108,15 @@
             </div>
         @else
 
-        {{-- Verification Form --}}
+        {{-- Verification Form (sequential mode) --}}
         <form id="verifyForm"
             data-action="{{ enroute('user.project.verify.save', $project->id) }}"
             data-save-label="Save Progress"
-            data-saving-label="Saving...">
+            data-saving-label="Saving..."
+            data-sequential="1">
             @csrf
+
+            @php $prevChecked = true; @endphp
 
             @foreach($categories as $group)
                 @php
@@ -147,12 +150,20 @@
 
                     <div class="verify-cat-body open" id="vcat-{{ $cat->id }}">
                         @foreach($catItems as $pc)
-                            @php $checkedByName = $pc->checkedBy ? trim($pc->checkedBy->first_name . ' ' . $pc->checkedBy->last_name) : null; @endphp
+                            @php
+                                $checkedByName = $pc->checkedBy
+                                    ? trim($pc->checkedBy->first_name . ' ' . $pc->checkedBy->last_name)
+                                    : null;
+                                $isLocked = !$pc->is_checked && !$prevChecked;
+                                $prevChecked = (bool) $pc->is_checked;
+                            @endphp
 
-                            <div class="verify-item-row {{ $pc->is_checked ? 'is-done' : '' }}"
+                            <div class="verify-item-row {{ $pc->is_checked ? 'is-done' : ($isLocked ? 'is-locked' : '') }}"
                                 id="row-{{ $pc->id }}" data-cat="{{ $cat->id }}">
                                 <div class="d-flex gap-3 align-items-start">
                                     <div class="verify-check-wrap mt-1">
+                                        {{-- Hidden input ensures unchecked state is always submitted --}}
+                                        <input type="hidden" name="items[{{ $pc->id }}][is_checked]" value="0">
                                         <input class="form-check-input verify-checkbox"
                                             type="checkbox"
                                             name="items[{{ $pc->id }}][is_checked]"
@@ -160,16 +171,21 @@
                                             id="vc_{{ $pc->id }}"
                                             data-pc-id="{{ $pc->id }}"
                                             data-cat="{{ $cat->id }}"
-                                            {{ $pc->is_checked ? 'checked' : '' }}>
+                                            {{ $pc->is_checked ? 'checked' : '' }}
+                                            {{ $isLocked ? 'disabled' : '' }}>
                                     </div>
                                     <div class="flex-grow-1">
                                         <div class="d-flex align-items-center gap-2 mb-1">
-                                            <label class="verify-item-label mb-0" for="vc_{{ $pc->id }}">
+                                            <label class="verify-item-label mb-0 {{ $isLocked ? 'text-muted' : '' }}" for="vc_{{ $pc->id }}">
                                                 {{ $pc->checklistItem->checklist_item }}
                                             </label>
                                             @if($pc->is_checked)
                                                 <span class="badge bg-success-subtle text-success verify-badge" id="badge-{{ $pc->id }}">
                                                     <i class="fa fa-circle-check me-1"></i>Completed
+                                                </span>
+                                            @elseif($isLocked)
+                                                <span class="badge bg-secondary-subtle text-secondary verify-badge" id="badge-{{ $pc->id }}">
+                                                    <i class="fa fa-lock me-1"></i>Locked
                                                 </span>
                                             @else
                                                 <span class="badge bg-warning-subtle text-warning verify-badge" id="badge-{{ $pc->id }}">
@@ -183,6 +199,10 @@
                                             @if($pc->checked_at)
                                                 &nbsp;&bull;&nbsp;<i class="fa fa-calendar-check me-1"></i>{{ $pc->checked_at->format('d M Y, h:i A') }}
                                             @endif
+                                        </div>
+                                        @elseif($isLocked)
+                                        <div class="verify-meta" id="meta-{{ $pc->id }}">
+                                            <i class="fa fa-circle-info me-1"></i>Complete the previous item to unlock this one.
                                         </div>
                                         @else
                                         <div class="verify-meta d-none" id="meta-{{ $pc->id }}"></div>
@@ -208,7 +228,7 @@
             {{-- Save --}}
             <div class="whiteBg d-flex justify-content-between align-items-center">
                 <span class="text-muted small">
-                    <i class="fa fa-info-circle me-1"></i>Partial completion is allowed. Save progress at any time.
+                    <i class="fa fa-list-ol me-1"></i>Items must be completed in order. Unchecking an item will also reset all items after it.
                 </span>
                 <div class="d-flex gap-2">
                     <a href="{{ route('user.project.index') }}" class="btn btn-outline-secondary">Cancel</a>
@@ -246,7 +266,9 @@
 .verify-item-row:hover { background:#fafbfc; }
 .verify-item-row.is-done { background:#f0fdf4; }
 .verify-item-row.is-done:hover { background:#dcfce7; }
+.verify-item-row.is-locked { opacity:.55; background:#f8f9fa; pointer-events:none; }
 .verify-check-wrap .form-check-input { width:1.25em; height:1.25em; cursor:pointer; }
+.verify-check-wrap .form-check-input:disabled { cursor:not-allowed; }
 .verify-item-label { font-size:0.9rem; font-weight:500; color:#374151; cursor:pointer; }
 .verify-meta { font-size:0.78rem; color:#6b7280; margin-top:2px; }
 </style>

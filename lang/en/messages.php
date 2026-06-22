@@ -24,6 +24,7 @@ return [
     'invalid_or_expired_token' => 'Invalid or expired token',
     'password_reset_successfully' => 'Password reset successfully',
     'invalid_credentials' => 'Invalid credentials',
+    'inactive_account' => 'Your account is inactive. Please contact the administrator',
     'user_unauthenticated' => 'User unauthenticated',
     'current_password_incorrect' => 'Current password is incorrect',
     'no_countries_found' => 'No countries found',

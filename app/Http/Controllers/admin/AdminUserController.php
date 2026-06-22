@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\StoreAdminUserRequest;
 use App\Http\Requests\Admin\UpdateAdminUserRequest;
 use App\Models\User;
 use App\Models\SiteSetting;
+use App\Services\SiteSettingService;
 use App\Traits\Common_trait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 class AdminUserController extends Controller
 {
     use Common_trait;
+    public function __construct(private readonly SiteSettingService $siteSettingService) {}
     public function index()
     {
         $allInfo = User::where('role', 2)->orderBy('created_at', 'desc')->paginate(10);
@@ -117,8 +119,6 @@ class AdminUserController extends Controller
         ]);
     }
 
-
-
     public function userAdd()
     {
         return view('admin.manage-users.add');
@@ -160,7 +160,7 @@ class AdminUserController extends Controller
                 'email'    => $user->email,
                 'password' => $req->password,
                 'login_url' => '',
-                'site_name' => SiteSetting::first()->site_name ?? config('app.name'),
+                'site_name' => ($this->siteSettingService->getSettings())->site_name ?? config('app.name'),
             ]
         );
         

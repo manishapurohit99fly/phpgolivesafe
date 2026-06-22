@@ -31,7 +31,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select name="status" id="status" class="form-select select2-single">
+                                <select name="status" id="status" class="form-select select2">
                                     <option value="1" {{ $project->status == 1 ? 'selected' : '' }}>Active</option>
                                     <option value="0" {{ $project->status == 0 ? 'selected' : '' }}>Inactive</option>
                                 </select>
@@ -52,6 +52,25 @@
                                     name="project_url" id="project_url"
                                     value="{{ $project->project_url }}" maxlength="500">
                                 <div class="form-valid-error d-none" id="error-project_url"></div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="tech_stack_id" class="form-label">
+                                    Tech Stack <span class="text-danger">*</span>
+                                </label>
+                                <select name="tech_stack_id" id="tech_stack_id" class="form-select select2">
+                                    <option value="">-- Select Tech Stack --</option>
+                                    @foreach($techStacks as $ts)
+                                        <option value="{{ $ts->id }}"
+                                            {{ $project->tech_stack_id == $ts->id ? 'selected' : '' }}>
+                                            {{ $ts->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="form-text text-muted">
+                                    Changing tech stack will filter the checklist to the new stack's items.
+                                </div>
+                                <div class="form-valid-error d-none" id="error-tech_stack_id"></div>
                             </div>
 
                             <div class="col-md-12 mb-3">

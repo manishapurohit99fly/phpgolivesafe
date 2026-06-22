@@ -61,7 +61,7 @@
 
                     <div class="col-md-2">
                         <label class="form-label">Status</label>
-                        <select id="status" class="form-control">
+                        <select id="status" class="form-control select2">
                             <option value="">All Status</option>
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
@@ -81,7 +81,7 @@
 
             <div class="card-body section-table">
                 <div class="table-responsive user-listing-wrapper">
-                    <table class="table theme-table align-middle datatable-ajax user-listing-table"
+                    <table class="table border-bottom-0 pb-2 theme-table align-middle datatable-ajax user-listing-table"
                         data-user-list
                         data-url="{{ route('admin.users.datatable') }}"
                         data-export-url="{{ route('admin.users.userExport') }}">

@@ -5,8 +5,12 @@ use App\Http\Controllers\admin\AdminUserController;
 use App\Http\Controllers\admin\AdminDashboardController;
 use App\Http\Controllers\admin\AdminSiteSettingController;
 use App\Http\Controllers\admin\AdminProjectController;
+use App\Http\Controllers\admin\AdminTechStackController;
+use App\Http\Controllers\admin\AdminAssessmentController;
 use App\Http\Controllers\admin\AdminProjectReportController;
-use App\Http\Controllers\admin\UserProjectController;
+use App\Http\Controllers\admin\AdminAssessmentListReportController;
+use App\Http\Controllers\user\UserProjectController;
+use App\Http\Controllers\user\UserAssessmentController;
 use App\Http\Controllers\PublicReportController;
 
 use App\Mail\ForgotPasswordMail;
@@ -62,7 +66,7 @@ Route::name('admin.')->middleware(['guest:admin', 'prevent-back-history'])->grou
 
 // ---------------------------------- ADMIN AUTHENTICATED -------------------------------------------
 
-Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin', 'user.active'])->group(function () {
 
     // Common routes — accessible by any authenticated role
     Route::get('logout', [AdminAuthController::class, 'logout'])->name('logout');
@@ -77,6 +81,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
     Route::middleware(['role:1'])->group(function () {
 
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard/data', [AdminDashboardController::class, 'dashboardData'])->name('dashboard.data');
 
         Route::prefix('users')->name('users.')->controller(AdminUserController::class)->group(function () {
             Route::get('index', 'index')->name('userIndex');
@@ -98,9 +103,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
         });
      
 
-        // Projects — full admin CRUD + checklist + verify + report + share
+        // Tech Stack Master
+        Route::prefix('tech-stack')->name('tech-stack.')->controller(AdminTechStackController::class)->group(function () {
+            Route::get('/',          'index')->name('index');
+            Route::get('/create',    'create')->name('create');
+            Route::post('/store',    'store')->name('store');
+            Route::get('/{id}/edit', 'edit')->name('edit');
+            Route::post('/{id}/update', 'update')->name('update');
+            Route::post('/destroy',  'destroy')->name('destroy');
+        });
+
+        // Projects — CRUD + legacy checklist/verify/report/share (kept for backward compatibility)
         Route::prefix('projects')->name('project.')->controller(AdminProjectController::class)->group(function () {
             Route::get('/',               'index')->name('index');
+            Route::get('/list-ajax',      'projectList')->name('list.ajax');
+            Route::get('/{id}/users',     'projectUsers')->name('users');
             Route::get('/ajax',           'datatable')->name('datatable');
             Route::get('/add',            'create')->name('create');
             Route::post('/add',           'store')->name('store');
@@ -111,39 +128,85 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(functi
             Route::get('/checklist/{id}', 'checklist')->name('checklist');
             Route::post('/checklist/{id}','saveChecklist')->name('checklist.save');
             Route::get('/verify/{id}',    'verify')->name('verify');
-            Route::post('/verify/{id}',   'saveVerification')->name('verify.save');            
+            Route::post('/verify/{id}',   'saveVerification')->name('verify.save');
             Route::get('/report/{id}',    'report')->name('report');
             Route::get('/report-data/{id}','reportData')->name('report.data');
             Route::post('/share',         'share')->name('share');
         });
 
+        // Assessments — CRUD + checklist + verify + report + share
+        Route::prefix('assessments')->name('assessment.')->controller(AdminAssessmentController::class)->group(function () {
+            Route::get('/for-project/{projectId}', 'forProject')->name('for-project');
+            Route::post('/',                        'store')->name('store');
+            Route::get('/edit/{id}',                'edit')->name('edit');
+            Route::post('/update/{id}',             'update')->name('update');
+            Route::post('/destroy',                 'destroy')->name('destroy');
+            Route::get('/checklist/{id}',           'checklist')->name('checklist');
+            Route::post('/checklist/{id}',          'saveChecklist')->name('checklist.save');
+            Route::get('/verify/{id}',              'verify')->name('verify');
+            Route::post('/verify/{id}',             'saveVerification')->name('verify.save');
+            Route::get('/report/{id}',              'report')->name('report');
+            Route::get('/report-data/{id}',         'reportData')->name('report.data');
+            Route::post('/share',                   'share')->name('share');
+        });
+
         // Admin Project Reports dashboard
         Route::prefix('project-reports')->name('project-reports.')->controller(AdminProjectReportController::class)->group(function () {
-            Route::get('/',     'index')->name('index');
-            Route::get('/load', 'load')->name('load');
-        });       
+            Route::get('/',                  'index')->name('index');
+            Route::get('/load',              'load')->name('load');
+            Route::get('/search',            'search')->name('search');
+            Route::get('/assessments',       'assessments')->name('assessments');
+            Route::get('/assessment-load',   'assessmentLoad')->name('assessment.load');
+        });
+
+        // Assessment List Report
+        Route::prefix('reports')->name('reports.')->controller(AdminAssessmentListReportController::class)->group(function () {
+            Route::get('/assessment-list',      'index')->name('assessment-list');
+            Route::get('/assessment-list/ajax', 'ajax')->name('assessment-list.ajax');
+        });
 
 
     }); // end role:1
 
 
 });
-Route::prefix('user')->name('user.')->middleware(['auth:admin', 'role:2'])->group(function () {
+Route::prefix('user')->name('user.')->middleware(['auth:admin', 'user.active', 'role:2'])->group(function () {
+    
+    Route::get('logout', [AdminAuthController::class, 'logout'])->name('logout');
+    Route::view('/profile', 'admin.profile.index')->name('getProfile');
+    Route::post('/update-profile', [AdminDashboardController::class, 'updateProfile'])->name('updateProfile');
+    Route::post('update-status', [AdminDashboardController::class, 'updateStatus'])->name('updateStatus');
+    Route::view('/change-password', 'admin.change-password.index')->name('changePassword.view');
+    Route::post('/change-password', [AdminDashboardController::class, 'changePassword'])->name('changePassword.update');
 
     Route::get('dashboard', [UserProjectController::class, 'dashboard'])->name('dashboard');
 
     Route::prefix('user-projects')->name('project.')->controller(UserProjectController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/list-ajax', 'projectList')->name('list.ajax');
         Route::get('/ajax', 'datatable')->name('datatable');
         Route::get('/verify/{id}', 'verify')->name('verify');
-        Route::post('/verify/{id}', 'saveVerification')->name('verify.save');        
+        Route::post('/verify/{id}', 'saveVerification')->name('verify.save');
     });
     
     Route::get('/report/{id}', [AdminProjectController::class, 'report'])->name('project.report');
 
-    Route::get('/user-reports', [UserProjectController::class, 'reportIndex'])->name('reports.index');
+    Route::get('/user-reports',                    [UserProjectController::class, 'reportIndex'])->name('reports.index');
+    Route::get('/user-reports/search',             [UserProjectController::class, 'reportSearch'])->name('reports.search');
+    Route::get('/user-reports/load',               [UserProjectController::class, 'reportLoad'])->name('reports.load');
+    Route::get('/user-reports/assessment-options', [UserProjectController::class, 'reportAssessments'])->name('reports.assessment.options');
+    Route::get('/user-reports/assessment-load',    [UserProjectController::class, 'reportAssessmentLoad'])->name('reports.assessment.load');
 
-    Route::get('/user-reports/load', [UserProjectController::class, 'reportLoad'])->name('reports.load');
+    // User Assessments — list, verify (checklist), report
+    Route::prefix('user-assessments')->name('assessment.')->controller(UserAssessmentController::class)->group(function () {
+        Route::get('/',                        'index')->name('index');
+        Route::get('/ajax',                    'datatable')->name('datatable');
+        Route::get('/for-project/{projectId}', 'forProject')->name('for-project');
+        Route::get('/checklist/{id}',          'verify')->name('checklist');
+        Route::post('/checklist/{id}',         'saveVerification')->name('checklist.save');
+        Route::post('/submit/{id}',            'submit')->name('submit');
+        Route::get('/report/{id}',             'report')->name('report');
+    });
 });
 // ---------------------------------- PUBLIC / WEBSITE ----------------------------------------
 

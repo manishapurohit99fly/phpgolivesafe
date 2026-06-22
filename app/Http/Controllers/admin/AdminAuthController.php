@@ -7,6 +7,7 @@ use App\Mail\AdminTwoFactorCodeMail;
 use App\Mail\ForgotPasswordMail;
 use App\Models\PasswordResetToken;
 use App\Models\SiteSetting;
+use App\Services\SiteSettingService;
 use App\Models\User;
 use App\Models\Verification;
 use App\Traits\Common_trait;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 class AdminAuthController extends Controller
 {
     use  Common_trait;
+    public function __construct(private readonly SiteSettingService $siteSettingService) {}
 
     public function loginAuth(Request $req)
     {
@@ -35,12 +37,17 @@ class AdminAuthController extends Controller
             return back()->with('flash-error', __('messages.invalid_credentials'))->withInput();
         }
 
+        if ($user->status != 1) {
+            return back()->with('flash-error', __('messages.inactive_account'))->withInput();
+        }
+
+
         // The `$siteSetting` variable is only auto-shared with VIEWS by the
         // `View::composer('*')` block in AppServiceProvider — it's not in
         // scope here. Fetch the row explicitly and tolerate a fresh
         // installation that has no settings row yet.
-        $siteSetting = SiteSetting::first();
-
+        $siteSetting = $this->siteSettingService->getSettings();
+    
         if ($siteSetting && $siteSetting->two_factor_enabled) {
 
             $otp = rand(100000, 999999);
@@ -63,6 +70,7 @@ class AdminAuthController extends Controller
                     'otp'  => $otp,
                 ]
             );
+            
 
             if (!$emailSent) {
                 return back()->with('flash-error', __('messages.otp_send_failed'))->withInput();
@@ -166,7 +174,7 @@ class AdminAuthController extends Controller
             ], 400);
         }
 
-        $user = User::where('email', $email)->whereIn('role', [1, 3])->first();
+        $user = User::where('email', $email)->whereIn('role', [1, 2])->first();
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -195,7 +203,7 @@ class AdminAuthController extends Controller
                     'otp'  => $otp,
                 ]
             );
-
+// dd($user->email);
             if (!$emailSent) {
                 return response()->json([
                     'success' => false,
@@ -241,7 +249,7 @@ class AdminAuthController extends Controller
         );
 
         // Send email
-        $resetLink = url('/admin/password/reset/' . $token);
+        $resetLink = url('/password/reset/' . $token);
 
         // MAIL CODE
         //$this->sendEmail($request->email, new ForgotPasswordMail($resetLink, $user->first_name));

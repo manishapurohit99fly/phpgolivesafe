@@ -5,7 +5,7 @@
 <div class="container-fluid pt-3 bg">
     <div class="page-content-wrapper">
         <div class="page-title-row">
-            <a href="{{ route('admin.userIndex') }}" class="btn-back" title="Back to Users">
+            <a href="{{ route('admin.users.userIndex') }}" class="btn-back" title="Back to Users">
                 <i class="fa fa-arrow-left"></i>
                 <span class="btn-back-label">Back</span>
             </a>
@@ -19,8 +19,8 @@
                 <div class="whiteBg">
                     <form action="{{ enroute('admin.users.userUpdate', $singleUser->id) }}" method="POST"
                         enctype="multipart/form-data" id="addUserForm"
-                        data-check-mail-url="{{ route('admin.checkEmail') }}"
-                        data-check-phone-url="{{ route('admin.checkPhone') }}"
+                        data-check-mail-url="{{ route('admin.users.checkEmail') }}"
+                        data-check-phone-url="{{ route('admin.users.checkPhone') }}"
                         data-user-id="@eid($singleUser->id)">
                         @csrf
                         <div class="row mb-3">
@@ -46,7 +46,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="phone-number" class="form-label">Phone Number <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control no-space" name="phone_no"
-                                    value="{{ $singleUser->phone_no }}" placeholder="Enter phone number" id="phone-number" maxlength="10"
+                                    value="{{ $singleUser->phone_no }}" placeholder="Enter phone number" id="phone-number" maxlength="15"
                                     oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                                 @error('phone_no')
                                     <div class="form-valid-error">{{ $message }}</div>
@@ -87,7 +87,7 @@
 
                             <div class="col-md-6">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select id="status" name="status" class="form-select">
+                                <select id="status" name="status" class="form-select select2">
                                     <option value="1" {{ $singleUser->status == '1' ? 'selected' : '' }}>Active
                                     </option>
                                     <option value="0" {{ $singleUser->status == '0' ? 'selected' : '' }}>Inactive
@@ -101,7 +101,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12 d-flex justify-content-end gap-2">                            
-                                <a href="{{ route('admin.userIndex') }}" class="btn btn-outline-primary">Cancel</a>
+                                <a href="{{ route('admin.users.userIndex') }}" class="btn btn-outline-primary">Cancel</a>
                                 <button type="submit" id="submitBtn" class="btn btn-primary">Update</button>
                             </div>
                         </div>

@@ -31,7 +31,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select name="status" id="status" class="form-select select2-single">
+                                <select name="status" id="status" class="form-select select2">
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>
@@ -54,10 +54,27 @@
                                 <div class="form-valid-error d-none" id="error-project_url"></div>
                             </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label for="tech_stack_id" class="form-label">
+                                    Tech Stack <span class="text-danger">*</span>
+                                </label>
+                                <select name="tech_stack_id" id="tech_stack_id" class="form-select select2">
+                                    <option value="">-- Select Tech Stack --</option>
+                                    @foreach($techStacks as $ts)
+                                        <option value="{{ $ts->id }}">{{ $ts->name }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="form-text text-muted">
+                                    Determines which checklist template items will be available.
+                                </div>
+                                <div class="form-valid-error d-none" id="error-tech_stack_id"></div>
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <label for="assigned_users" class="form-label">
                                     <i class="fa fa-users me-1 text-primary"></i>Assigned Verification Users
                                 </label>
+                                
                                 <select name="assigned_users[]" id="assigned_users"
                                     class="form-select select2-multi" multiple
                                     data-placeholder="Select verification users...">

@@ -7,7 +7,7 @@
     <p class="text-muted small mb-0">Shared read-only view &nbsp;&bull;&nbsp; Generated {{ now()->format('d M Y') }}</p>
 </div>
 
-@include('admin.partials.project-report', ['reportData' => $reportData, 'isPublic' => true])
+@include('partials.project-report', ['reportData' => $reportData, 'isPublic' => true])
 @endsection
 
 @push('styles')

@@ -30,8 +30,8 @@ class DatabaseSeeder extends Seeder
             ManageUsersSeeder::class,
             FaqSeeder::class,
             TestSeeder::class,
-            ChecklistCategorySeeder::class,
-            ChecklistItemSeeder::class,
+            TechStackSeeder::class,
+            DummyDataSeeder::class,
         ]);
     }
 }

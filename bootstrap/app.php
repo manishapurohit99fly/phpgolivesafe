@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AuthenticateApi;
+use App\Http\Middleware\CheckUserActive;
 
 /*return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -47,6 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
                 'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
             'role'                 => \App\Http\Middleware\RoleMiddleware::class,
+            'user.active'          => CheckUserActive::class,
         ]);
 
         // Centralised inbound ID decryption for every web request. Runs

@@ -76,7 +76,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label" style="font-weight: 600; font-size: 14px;">Name <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control no-leading-space" name="name"
-                                                        value="{{ $currentUserInfo->first_name }}" placeholder="Enter name"
+                                                        value="{{ $currentUserInfo->first_name . ' ' . $currentUserInfo->last_name  }}" placeholder="Enter name"
                                                         id="first-name" maxlength="50">
                                                     <div class="text-danger error-name"></div>
                                                 </div>
@@ -85,7 +85,7 @@
 
                                             <div class="ms-3 mt-5 d-flex justify-content-end">
                                                 <a
-                                                    href="{{ route('admin.dashboard') }}"
+                                                    href="{{(int) (auth('admin')->user()?->role === 1) ?  route('admin.dashboard') : route('user.dashboard') }}"
                                                     class="btn btn-outline-primary me-3"
                                                 >                                                    
                                                     Cancel

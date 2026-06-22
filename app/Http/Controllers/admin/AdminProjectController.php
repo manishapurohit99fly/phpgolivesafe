@@ -8,9 +8,11 @@ use App\Models\ChecklistItem;
 use App\Models\Project;
 use App\Models\ProjectChecklist;
 use App\Models\SharedReport;
+use App\Models\TechStack;
 use App\Models\User;
 use App\Services\ProjectReportService;
 use Illuminate\Http\JsonResponse;
+use App\Traits\Common_trait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -18,6 +20,8 @@ use Illuminate\View\View;
 
 class AdminProjectController extends Controller
 {
+    use  Common_trait;
+
     public function __construct(protected ProjectReportService $reportService) {}
 
     // ------------------------------------------------------------------
@@ -27,6 +31,58 @@ class AdminProjectController extends Controller
     public function index(): View
     {
         return view('admin.projects.index');
+    }
+
+    public function projectUsers(int $id): JsonResponse
+    {
+        $project = Project::with(['users' => fn ($q) => $q->select('users.id', 'users.first_name', 'users.last_name', 'users.email')])->findOrFail($id);
+
+        $users = $project->users->map(fn ($u) => [
+            'id'    => $u->id,
+            'name'  => $u->first_name . ' ' . $u->last_name,
+            'email' => $u->email,
+        ])->values();
+
+        return response()->json(['users' => $users]);
+    }
+
+    public function projectList(Request $request): JsonResponse
+    {
+        $query = Project::withCount('assessments');
+
+        if ($request->filled('keyword')) {
+            $kw = $request->keyword;
+            $query->where(fn ($q) => $q
+                ->where('project_name', 'like', "%{$kw}%")
+                ->orWhere('client_name', 'like', "%{$kw}%")
+            );
+        }
+
+        if ($request->status !== null && $request->status !== '') {
+            $query->where('status', $request->status);
+        }
+
+        $perPage  = 5;
+        $page     = max(1, (int) $request->get('page', 1));
+        $total    = $query->count();
+        $lastPage = (int) ceil($total / $perPage) ?: 1;
+        $page     = min($page, $lastPage);
+
+        $projects = $query->orderBy('project_name')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        $html = view('admin.projects._accordion', compact('projects'))->render();
+
+        return response()->json([
+            'html'      => $html,
+            'count'     => $projects->count(),
+            'total'     => $total,
+            'page'      => $page,
+            'per_page'  => $perPage,
+            'last_page' => $lastPage,
+        ]);
     }
 
     public function datatable(Request $request): JsonResponse
@@ -104,11 +160,12 @@ class AdminProjectController extends Controller
 
     public function create(): View
     {
-        $verifiers = User::where('role', 2)->where('status', 1)
+        $verifiers  = User::where('role', 2)->where('status', 1)
             ->orderBy('first_name')
             ->get(['id', 'first_name', 'last_name', 'email']);
+        $techStacks = TechStack::where('status', 1)->orderBy('sort_order')->orderBy('name')->get();
 
-        return view('admin.projects.add', compact('verifiers'));
+        return view('admin.projects.add', compact('verifiers', 'techStacks'));
     }
 
     public function store(Request $request): JsonResponse
@@ -119,6 +176,7 @@ class AdminProjectController extends Controller
                 'project_description' => ['nullable', 'string'],
                 'client_name'         => ['nullable', 'string', 'max:255'],
                 'project_url'         => ['nullable', 'url', 'max:500'],
+                'tech_stack_id'       => ['required', 'exists:' . config('tables.tech_stacks') . ',id'],
                 'deployment_notes'    => ['nullable', 'string'],
                 'status'              => ['required', 'in:0,1'],
                 'assigned_users'      => ['nullable', 'array'],
@@ -130,6 +188,19 @@ class AdminProjectController extends Controller
 
                 // Sync assigned users
                 $project->users()->sync($request->input('assigned_users', []));
+                foreach ($project->users as $user) {
+                     $this->sendDynamicEmail(
+                        $user->email,
+                        'project_assigned',
+                        [
+                            'name'          => $user->first_name,
+                            'project_name'  => $project->project_name,
+                            'assigned_by'   => auth()->user()->first_name,
+                            'assigned_date' => now()->format('d M Y h:i A'),
+                            'project_url'   => route('user.dashboard'),
+                        ]
+                    );
+                }
 
                 // Auto-generate public share token
                 SharedReport::create([
@@ -147,7 +218,7 @@ class AdminProjectController extends Controller
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {            
             return response()->json(['success' => false, 'message' => __('messages.something_went_wrong')], 500);
         }
     }
@@ -169,13 +240,14 @@ class AdminProjectController extends Controller
 
     public function edit(int $id): View
     {
-        $project   = Project::with('users:id')->findOrFail($id);
-        $verifiers = User::where('role', 2)->where('status', 1)
+        $project     = Project::with('users:id')->findOrFail($id);
+        $verifiers   = User::where('role', 2)->where('status', 1)
             ->orderBy('first_name')
             ->get(['id', 'first_name', 'last_name', 'email']);
+        $techStacks  = TechStack::where('status', 1)->orderBy('sort_order')->orderBy('name')->get();
         $assignedIds = $project->users->pluck('id')->toArray();
 
-        return view('admin.projects.edit', compact('project', 'verifiers', 'assignedIds'));
+        return view('admin.projects.edit', compact('project', 'verifiers', 'techStacks', 'assignedIds'));
     }
 
     public function update(Request $request, int $id): JsonResponse
@@ -188,6 +260,7 @@ class AdminProjectController extends Controller
                 'project_description' => ['nullable', 'string'],
                 'client_name'         => ['nullable', 'string', 'max:255'],
                 'project_url'         => ['nullable', 'url', 'max:500'],
+                'tech_stack_id'       => ['required', 'exists:' . config('tables.tech_stacks') . ',id'],
                 'deployment_notes'    => ['nullable', 'string'],
                 'status'              => ['required', 'in:0,1'],
                 'assigned_users'      => ['nullable', 'array'],
@@ -196,7 +269,22 @@ class AdminProjectController extends Controller
 
             DB::transaction(function () use ($project, $validated, $request) {
                 $project->update(collect($validated)->except('assigned_users')->toArray());
-                $project->users()->sync($request->input('assigned_users', []));
+                $changes = $project->users()->sync($request->input('assigned_users', []));
+                $addedUsers = User::whereIn('id', $changes['attached'])->get();                
+                foreach ($addedUsers as $user) {
+                    $this->sendDynamicEmail(
+                        $user->email,
+                        'project_assigned',
+                        [
+                            'name'          => $user->first_name,
+                            'project_name'  => $project->project_name,
+                            'assigned_by'   => auth()->user()->first_name,
+                            'assigned_date' => now()->format('d M Y h:i A'),
+                            'project_url'   => route('user.dashboard'),
+                        ]
+                    );
+                }
+                
             });
 
             return response()->json([
@@ -206,7 +294,7 @@ class AdminProjectController extends Controller
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {            
             return response()->json(['success' => false, 'message' => __('messages.something_went_wrong')], 500);
         }
     }
@@ -237,13 +325,18 @@ class AdminProjectController extends Controller
 
     public function checklist(int $id): View
     {
-        $project     = Project::findOrFail($id);
-        $categories  = ChecklistCategory::with(['items' => fn ($q) => $q->orderBy('sort_order')])
-                            ->orderBy('sort_order')
-                            ->get();
+        $project = Project::with('techStack')->findOrFail($id);
+        
+        $catQuery = ChecklistCategory::with(['items' => fn ($q) => $q->orderBy('sort_order')])
+            ->orderBy('sort_order');
+
+        // Always filter by tech stack — null returns empty collection (empty state shown in blade)
+        $catQuery->where('tech_stack_id', $project->tech_stack_id);
+
+        $categories  = $catQuery->get();
         $assignedIds = ProjectChecklist::where('project_id', $project->id)
-                            ->pluck('checklist_item_id')
-                            ->toArray();
+            ->pluck('checklist_item_id')
+            ->toArray();
 
         return view('admin.projects.checklist', compact('project', 'categories', 'assignedIds'));
     }
@@ -252,7 +345,14 @@ class AdminProjectController extends Controller
     {
         $project     = Project::findOrFail($id);
         $selectedIds = array_map('intval', (array) $request->input('checklist_items', []));
-        $allItemIds  = ChecklistItem::pluck('id')->toArray();
+
+        // Scope removal only to items in this project's tech stack
+        $catQuery = ChecklistCategory::query();
+        if ($project->tech_stack_id) {
+            $catQuery->where('tech_stack_id', $project->tech_stack_id);
+        }
+        $catIds     = $catQuery->pluck('id');
+        $allItemIds = ChecklistItem::whereIn('category_id', $catIds)->pluck('id')->toArray();
 
         DB::transaction(function () use ($project, $selectedIds, $allItemIds) {
             $toRemove = array_diff($allItemIds, $selectedIds);

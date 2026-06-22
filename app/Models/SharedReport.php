@@ -17,11 +17,17 @@ class SharedReport extends Model
 
     protected $fillable = [
         'project_id',
+        'assessment_id',
         'unique_token',
     ];
 
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function assessment(): BelongsTo
+    {
+        return $this->belongsTo(Assessment::class, 'assessment_id');
     }
 }

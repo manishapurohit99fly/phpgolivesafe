@@ -44,6 +44,12 @@
             --secondarycolor:    {{ $secondaryColour }};
             --primarycolor:      {{ $primaryColour }};
         }
+
+        /* Prevent active li's primary background bleeding into submenu item anchors */
+        .menubar li.active .submenu li a {
+            background: transparent;
+        }
+
     </style>
 
     @stack('styles')
@@ -59,9 +65,10 @@
         <span class="admin-toastr"
             onclick="toastr_alert('Success','{{ session()->get('flash-success') }}','success')"></span>
     @endif
+    @php $authRole = (int) (auth('admin')->user()?->role ?? 0); @endphp
     <aside class="sidebar">
         <div class="closemenu-btn"><img src="{{ asset('assets/images/Close_round_fill.png') }}" class="img-fluid"></div>
-        <a href="{{ route('admin.dashboard') }}">
+        <a href="{{ $authRole === 1 ? route('admin.dashboard') : route('user.dashboard') }}">
         <div class="text-center sildebarlogo">
             @php $logoSrc = ($siteSetting?->site_logo) ? asset($siteSetting->site_logo) : asset('assets/images/sidebarlogo.svg'); @endphp
             <img src="{{ $logoSrc }}" class="img-fluid logo-full" alt="{{ $siteSetting?->site_name ?? 'Admin' }}" style="max-height:60px; object-fit:contain;">
@@ -69,7 +76,8 @@
         </div>
         </a>
         <div class="menubar-holder">
-            @php $authRole = (int) (auth('admin')->user()?->role ?? 0); @endphp
+            
+            
             <ul class="menubar">
 
                 @if($authRole === 1)
@@ -93,17 +101,35 @@
                     </a>
                 </li>
                
+                {{-- <li class="mt-2 {{ request()->routeIs('admin.tech-stack.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.tech-stack.index') }}">
+                        <span class="menu-icon"><i class="fa fa-layer-group"></i></span>
+                        <span>Tech Stack Master</span>
+                    </a>
+                </li> --}}
                 <li class="mt-2 {{ request()->routeIs('admin.project.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.project.index') }}">
                         <span class="menu-icon"><i class="fa fa-diagram-project"></i></span>
                         <span>Projects</span>
                     </a>
                 </li>
-                <li class="mt-2 {{ request()->routeIs('admin.project-reports.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.project-reports.index') }}">
+                <li class="mt-2 {{ request()->routeIs('admin.project-reports.*') || request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                    <a href="javascript:void(0)" class="has-submenu {{ request()->routeIs('admin.project-reports.*') || request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                         <span class="menu-icon"><i class="fa fa-chart-bar"></i></span>
-                        <span>Project Reports</span>
+                        <span>Reports</span>
                     </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="{{ route('admin.project-reports.index') }}" class="{{ request()->routeIs('admin.project-reports.*') ? 'active' : '' }}">
+                                Assessment-wise Detail Report
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.reports.assessment-list') }}" class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                                Assessment List Report
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 
                 @elseif($authRole === 2)
@@ -144,19 +170,19 @@
             </a>
             <ul class="dropdown-menu user-menu-dropdown">
                 <li>
-                    <a class="dropdown-item" href="{{ route('admin.getProfile') }}">
+                    <a class="dropdown-item" href="{{ $authRole === 1 ? route('admin.getProfile') : route('user.getProfile') }}">
                         <span class="menu-icon"><i class="fa fa-user"></i></span>
                         <span>Profile</span>
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="{{ route('admin.changePassword.view') }}">
+                    <a class="dropdown-item" href="{{ $authRole === 1 ? route('admin.changePassword.view') : route('user.changePassword.view')  }}">
                         <span class="menu-icon"><i class="fa fa-lock"></i></span>
                         <span>Change Password</span>
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item dropdown-item-logout" href="{{ route('admin.logout') }}">
+                    <a class="dropdown-item dropdown-item-logout" href="{{ $authRole === 1 ? route('admin.logout') : route('user.logout') }}">
                         <span class="menu-icon"><i class="fa fa-arrow-right-from-bracket"></i></span>
                         <span>Logout</span>
                     </a>
@@ -274,6 +300,9 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
     $(function () {
+         $('select.select2:not([data-no-select2])').select2({
+            width: '100%'
+        });
         $('select[multiple]').not('[data-no-select2]').each(function () {
             var $el = $(this);
             $el.select2({
@@ -283,6 +312,7 @@
                 placeholder: $el.data('placeholder') || 'Select options...',
             });
         });
+       
     });
     </script>
     @stack('scripts')

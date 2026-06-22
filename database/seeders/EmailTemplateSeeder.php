@@ -224,6 +224,107 @@ class EmailTemplateSeeder extends Seeder
 </html>',
     'status'  => 1,
 ],
+[
+    'name'    => 'project_assigned',
+    'subject' => 'New Project Assigned - ' . $appName,
+    'body'    => '<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px;">
+  <table width="600" style="margin:0 auto; background:#ffffff; padding:30px; border-radius:8px;">
+    <tr>
+      <td>
+        <h2 style="color:#333333;">Hello, {{name}}!</h2>
+
+        <p style="color:#555555;">
+          A new project has been assigned to you in <strong>' . $appName . '</strong>.
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+          <tr>
+            <td style="padding:10px; border:1px solid #e5e5e5;"><strong>Project Name</strong></td>
+            <td style="padding:10px; border:1px solid #e5e5e5;">{{project_name}}</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border:1px solid #e5e5e5;"><strong>Assigned By</strong></td>
+            <td style="padding:10px; border:1px solid #e5e5e5;">{{assigned_by}}</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border:1px solid #e5e5e5;"><strong>Assigned On</strong></td>
+            <td style="padding:10px; border:1px solid #e5e5e5;">{{assigned_date}}</td>
+          </tr>
+        </table>
+
+        <p style="color:#555555;">
+          Please log in to the system and review the project details and assigned tasks.
+        </p>
+
+        <p style="text-align:center; margin:30px 0;">
+          <a href="{{project_url}}"
+             style="background:#4F46E5; color:#ffffff; padding:12px 28px; border-radius:5px; text-decoration:none; font-size:15px;">
+            View Project
+          </a>
+        </p>
+
+        <hr style="border:none; border-top:1px solid #eeeeee; margin:20px 0;">
+
+        <p style="color:#aaaaaa; font-size:12px;">
+          This is an automated notification from ' . $appName . '.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>',
+    'status'  => 1,
+],
+            [
+                'name'    => 'all_items_verified',
+                'subject' => 'All Checklist Items Verified – {{project_name}}',
+                'body'    => '<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px;">
+  <table width="600" style="margin:0 auto; background:#ffffff; padding:30px; border-radius:8px;">
+    <tr>
+      <td>
+        <h2 style="color:#333333;">Hello, {{admin_name}}!</h2>
+
+        <p style="color:#555555;">
+          All checklist items for the project <strong>{{project_name}}</strong> have been verified.
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+          <tr>
+            <td style="padding:10px; border:1px solid #e5e5e5;"><strong>Project</strong></td>
+            <td style="padding:10px; border:1px solid #e5e5e5;">{{project_name}}</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border:1px solid #e5e5e5;"><strong>Verified By</strong></td>
+            <td style="padding:10px; border:1px solid #e5e5e5;">{{verifier_name}}</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border:1px solid #e5e5e5;"><strong>Completed On</strong></td>
+            <td style="padding:10px; border:1px solid #e5e5e5;">{{verified_at}}</td>
+          </tr>
+        </table>
+
+        <p style="text-align:center; margin:30px 0;">
+          <a href="{{project_url}}"
+             style="background:#4F46E5; color:#ffffff; padding:12px 28px; border-radius:5px; text-decoration:none; font-size:15px;">
+            View Project
+          </a>
+        </p>
+
+        <hr style="border:none; border-top:1px solid #eeeeee; margin:20px 0;">
+        <p style="color:#aaaaaa; font-size:12px;">This is an automated notification from ' . $appName . '.</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>',
+                'status'  => 1,
+            ],
         ];
 
         foreach ($templates as $template) {

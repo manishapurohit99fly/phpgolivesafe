@@ -12,7 +12,7 @@
     <div class="col-lg-6  col-md-12 login-right">
         <div class="loginRightImg">
             <div class="login-container">
-                {{-- <div class="text-center mb-5"><img src="{{ asset('assets/images/admin-logo.png') }}"></div> --}}
+                <div class="text-center mb-5"><img src="{{($siteSetting?->site_logo) ? asset($siteSetting->site_logo) : asset('assets/images/sidebarlogo.svg'); }}"></div>
                 <form method="post" action="{{ route('admin.loginAuth') }}" id="loginForm">
                     @csrf
                     <div class="whiteBg">
@@ -99,7 +99,7 @@
                 } else {
                     error.insertAfter(element);
                 }
-            }
+            },
             highlight: function(element) {
                 $(element).addClass('is-invalid');
             },
@@ -109,6 +109,10 @@
         });
 
         // Password visibility toggle is bound globally in custom.js
+
+        @if(session('error'))
+        toastr.error('{{ session('error') }}');
+        @endif
     });
 </script>
 @endpush
